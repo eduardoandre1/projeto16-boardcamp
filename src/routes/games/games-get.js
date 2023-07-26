@@ -1,2 +1,2 @@
-const {Router} = require('express')
-const {db} =require('/src/database.postgresSQL')
+import { Router } from 'express'
+import { db } from '/src/database.postgresSQL'
