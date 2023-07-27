@@ -3,11 +3,7 @@ import dotenv from "dotenv";
 dotenv.config()
 const {Pool} = pg;
 const DB = new Pool({
-    //user: 'bootcamp_role',
-    //host:'localhost',
-    //database:'boardcamp',
-    //password:'eduardo',
-    //port:5432,
-    connectionString:process.env.DATABASE_URL})
-const server_status = DB.connect()
+    connectionString:process.env.DATABASE_URL || 'postgres://bootcamp_role:eduardo@localhost:5432/boardcamp'
+})
+
 export default DB

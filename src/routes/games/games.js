@@ -25,7 +25,7 @@ games.post('/games', async(req,res)=>{
         stockTotal: Joi.number().min(1),
         pricePerDay:Joi.number().min(1)
     })
-    const input_test =schema.validate(game_maker)
+    const input_test =schema.validate(game_maker,{ abortEarly: false })
     try{
         if(input_test.error){
             if(!input_test.name){
