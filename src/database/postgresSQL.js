@@ -8,6 +8,7 @@ const DB = new pg.Pool({
     database:'boardcamp',
     password:'eduardo',
     port:5432
+    //DATABASE_URL:'postgres://boardcamp:eduardo@localhost:5432/boardcamp'
 
 })
 
