@@ -8,8 +8,6 @@ const DB = new Pool({
     //database:'boardcamp',
     //password:'eduardo',
     //port:5432,
-    connectionString:'postgres://bootcamp_role:eduardo@localhost:5432/boardcamp' || process.env.DATABASE_URL
-
-})
+    connectionString:process.env.DATABASE_URL})
 const server_status = DB.connect()
 export default DB

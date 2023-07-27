@@ -4,8 +4,11 @@ import Joi from 'joi'
 
 const games = Router()
 games.get('/games',async(req,res)=>{ 
-    const g = await DB.query('SELECT * FROM games;')
-    return res.status(200).send(g.rows)
+    try{
+        const g = await DB.query('SELECT * FROM games;')
+        return res.status(200).send(g.rows)
+    }catch(err){return res.status(500).send(err.message)}
+    
 })
 
 games.post('/games', async(req,res)=>{
@@ -31,9 +34,10 @@ games.post('/games', async(req,res)=>{
             console.log(input_test.error)
             return res.send(input_test.error).status(400)//ainda tem que ver como diferenciar os erros
         }
-        const inserir = 'INSERT INTO games ("name","image","stockTotal","pricePerDay") VALUES ($1,$2,$3,4$)'
-        await DB.query(inserir,[game_maker.name,game_maker.image,game_maker.stockTotal,game_maker.pricePerDay])
-        return res.status(201)
+        const inserir = 'INSERT INTO games (name,image,"stockTotal","pricePerDay") VALUES ($1,$2,$3,$4)'
+        const g = await DB.query(inserir,[game_maker.name,game_maker.image,game_maker.stockTotal,game_maker.pricePerDay])
+        console.log('done')
+        return res.sendStatus(201)
     }catch(err){return res.status(500).send(err.message)}
     
 
