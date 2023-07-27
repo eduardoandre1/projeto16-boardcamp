@@ -1,6 +1,6 @@
 {
   "name": "projeto16-boardcamp",
-  "type": "commonjs",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
