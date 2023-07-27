@@ -1,10 +1,9 @@
-const cors =require('cors')
-const express = require('express')
-const db =require('./database/postgresSQL.js')
+import cors from 'cors'
+import express, { json } from 'express'
+import db from './database/postgresSQL.js'
 const app = express()
 app.use(cors())
-app.use(express.json())
-app.use()
+app.use(json())
 
 const port = process.env.PORT || 5000
 app.listen(port,()=>console.log("api is working"))
