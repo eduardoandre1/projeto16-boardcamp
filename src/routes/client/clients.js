@@ -1,6 +1,6 @@
 import DB from "../../database/postgresSQL.js";
 import { Router, json } from "express";
-import Joi, { string } from "joi";
+import Joi from "joi";
 
 const client = Router()
 
