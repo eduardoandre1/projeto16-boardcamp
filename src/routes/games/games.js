@@ -32,8 +32,9 @@ games.post('/games', async(req,res)=>{
     }
     //
     try{
-        const already_have = await DB.query("SELECT * FROM games WHERE nome = $1",[name])
-        if(already_have){
+        const already_have = await DB.query("SELECT * FROM games WHERE name = $1",[name])
+        console.log(already_have)
+        if(already_have.rowCount !== 0){
             return res.sendStatus(409)
         }
         const inserir = 'INSERT INTO games (name,image,"stockTotal","pricePerDay") VALUES ($1,$2,$3,$4)'

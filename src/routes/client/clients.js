@@ -4,7 +4,7 @@ import Joi from "joi";
 
 const client = Router()
 
-client.get('/customers\:id',async(req,res)=>{ 
+client.get('/customers',async(req,res)=>{ 
     
     try{
         const table = await DB.query('SELECT * FROM customers;')
@@ -12,6 +12,14 @@ client.get('/customers\:id',async(req,res)=>{
     }catch(err){return res.status(500).send(err.message)}
     
 })
+client.get(client.get('/customers',async(req,res)=>{ 
+    
+    try{
+        const table = await DB.query('SELECT * FROM customers;')
+        return res.status(200).send(table.rows)
+    }catch(err){return res.status(500).send(err.message)}
+    
+}))
 
 client.post('/customers',async(req,res)=>{
     const {name,phone,cpf,birthday} = req.body
@@ -30,7 +38,7 @@ client.post('/customers',async(req,res)=>{
     }
     try{
         const already_have = await DB.query("SELECT * FROM $1 WHERE $3 = $2",['customers','cpf',cpf])
-        if(already_have){
+        if(already_have.rowCount !== 0){
             return res.sendStatus(409)
         }
     }catch(err){return res.status(500).send(err.message)}
