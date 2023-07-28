@@ -5,14 +5,15 @@ import Joi from 'joi'
 const games = Router()
 games.get('/games',async(req,res)=>{ 
     try{
-        const g = await DB.query('SELECT * FROM games;')
-        return res.status(200).send(g.rows)
+        const table = await DB.query('SELECT * FROM games;')
+        return res.status(200).send(table.rows)
     }catch(err){return res.status(500).send(err.message)}
     
 })
 
 games.post('/games', async(req,res)=>{
     const {name,image,stockTotal,pricePerDay} = req.body
+    // input validation 
     const game_maker = {
         name: name,
         image: image,
@@ -26,13 +27,14 @@ games.post('/games', async(req,res)=>{
         pricePerDay:Joi.number().min(1)
     })
     const input_test =schema.validate(game_maker,{ abortEarly: false })
+    if(input_test.error){
+        return res.send(input_test.error).status(400)
+    }
+    //
     try{
-        if(input_test.error){
-            if(!input_test.name){
-                return res.status(422).send(input_test.error)
-            }
-            console.log(input_test.error)
-            return res.send(input_test.error).status(400)//ainda tem que ver como diferenciar os erros
+        const already_have = await DB.query("SELECT * FROM games WHERE nome = $1",[name])
+        if(already_have){
+            return res.sendStatus(409)
         }
         const inserir = 'INSERT INTO games (name,image,"stockTotal","pricePerDay") VALUES ($1,$2,$3,$4)'
         const g = await DB.query(inserir,[game_maker.name,game_maker.image,game_maker.stockTotal,game_maker.pricePerDay])
