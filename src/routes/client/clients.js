@@ -12,10 +12,11 @@ client.get('/customers',async(req,res)=>{
     }catch(err){return res.status(500).send(err.message)}
     
 })
-client.get(client.get('/customers',async(req,res)=>{ 
-    
+client.get(client.get('/customers/:id',async(req,res)=>{ 
+    const id = req.params.id
+    const schema_id = Joi.number().integer().required()
     try{
-        const table = await DB.query('SELECT * FROM customers;')
+        const table = await DB.query('SELECT * FROM customers WHERE id = $1;',[id])
         return res.status(200).send(table.rows)
     }catch(err){return res.status(500).send(err.message)}
     
@@ -32,18 +33,20 @@ client.post('/customers',async(req,res)=>{
     const customers_create ={
         name:name,phone:phone,cpf:cpf,birthday:birthday
     }
-    const input_test =schema.validate(customers_create,{ abortEarly: false })
+    const input_test =schema_custumer.validate(customers_create,{ abortEarly: false })
     if(input_test.error){
-        return res.status(400).send(input_test.error)
+        return res.status(400)
     }
     try{
-        const already_have = await DB.query("SELECT * FROM $1 WHERE $3 = $2",['customers','cpf',cpf])
+        const already_have = await DB.query('SELECT * FROM customers WHERE cpf = $1',[cpf])
         if(already_have.rowCount !== 0){
             return res.sendStatus(409)
         }
-    }catch(err){return res.status(500).send(err.message)}
-
-    
+        const inserir = 'INSERT INTO customers (name,phone,cpf,birthday) VALUES ($1,$2,$3,$4)'
+        const g = await DB.query(inserir,[name,phone,cpf,birthday])
+        console.log('done')
+        return res.sendStatus(201)
+    }catch(err){return res.status(500).send(err.message)}    
 })
 
 export default client
