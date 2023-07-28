@@ -16,7 +16,10 @@ client.get(client.get('/customers/:id',async(req,res)=>{
     const id = req.params.id
     const schema_id = Joi.number().integer().required()
     try{
-        const table = await DB.query('SELECT * FROM customers WHERE id = $1;',[id])
+        const table = await DB.query('SELECT ONE * FROM customers WHERE id = $1;',[id])
+        if(table.rowCount === 0){
+            return res.sendStatus(404)
+        }
         return res.status(200).send(table.rows)
     }catch(err){return res.status(500).send(err.message)}
     
@@ -27,7 +30,7 @@ client.post('/customers',async(req,res)=>{
     const schema_custumer = Joi.object({
         name: Joi.string().required(),
         phone: Joi.string().min(10).max(11),
-        cpf: Joi.string().min(11).max(11).required(),
+        cpf: Joi.string().min(11).required(),
         birthday: Joi.string()
     })
     const customers_create ={
@@ -35,7 +38,7 @@ client.post('/customers',async(req,res)=>{
     }
     const input_test =schema_custumer.validate(customers_create,{ abortEarly: false })
     if(input_test.error){
-        return res.status(400)
+        return res.sendStatus(400)
     }
     try{
         const already_have = await DB.query('SELECT * FROM customers WHERE cpf = $1',[cpf])
@@ -48,5 +51,9 @@ client.post('/customers',async(req,res)=>{
         return res.sendStatus(201)
     }catch(err){return res.status(500).send(err.message)}    
 })
+client.put('/customers/:id',(req,res)=>{
+    const {name,phone,cpf,birthday} = req.body
+    const id = req.params.id
 
+})
 export default client
