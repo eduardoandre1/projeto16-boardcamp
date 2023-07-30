@@ -30,7 +30,7 @@ client.get(client.get('/customers/:id',async(req,res)=>{
         if(table.rowCount === 0){
             return res.sendStatus(404)
         }
-        return res.status(200).send(table.rows)
+        return res.status(200).send(table.rows[0])
     }catch(err){return res.status(500).send(err.message)}
     
 }))
@@ -73,7 +73,7 @@ client.put('/customers/:id',async(req,res)=>{
     try{
         await DB.query('UPDATE customers SET (name,phone,cpf,birthday) = ($1,$2,$3,$4) WHERE id = $5;',[name,phone,cpf,birthday,id])
         console.log('done')
-        return res.sendStatus(201)
+        return res.sendStatus(200)
     }catch(err){return res.status(500).send(err.message)}
 
 })
