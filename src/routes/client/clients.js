@@ -37,9 +37,6 @@ client.get(client.get('/customers/:id',async(req,res)=>{
 
 client.post('/customers',async(req,res)=>{
     const {name,phone,cpf,birthday} = req.body
-    // schema
-    
-    //schema end
     //middlleware
     const customers_create ={
         name:name,phone:phone,cpf:cpf,birthday:birthday
@@ -49,8 +46,9 @@ client.post('/customers',async(req,res)=>{
         console.log(input_test.error.message)
         return res.sendStatus(400)
     }
+    //
     try{
-        const already_have = await DB.query('SELECT * FROM customers WHERE cpf = $1',[cpf])
+        const already_have = await DB.query(`SELECT * FROM customers WHERE cpf = $1`,[cpf])
         if(already_have.rowCount !== 0){
             return res.sendStatus(409)
         }
@@ -65,7 +63,13 @@ client.post('/customers',async(req,res)=>{
 })
 client.put('/customers/:id',async(req,res)=>{
     const {name,phone,cpf,birthday} = req.body
+    const customers_update = {name:name,phone:phone,cpf:cpf,birthday:birthday}
     const id = req.params.id
+    const input_test =schema_custumer.validate(customers_update,{ abortEarly: false })
+    if(input_test.error){
+        console.log(input_test.error.message)
+        return res.sendStatus(400)
+    }
     try{
         await DB.query('UPDATE customers SET (name,phone,cpf,birthday) = ($1,$2,$3,$4) WHERE id = $5;',[name,phone,cpf,birthday,id])
         console.log('done')

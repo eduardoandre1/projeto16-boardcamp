@@ -1,6 +1,5 @@
 import { Router } from "express";
 import DB from "../../database/postgresSQL.js";
-import Joi from "joi";
 import  dayjs  from "dayjs";
 const rents = Router()
 rents.get("/rental",async(req,res)=>{
