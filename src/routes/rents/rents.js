@@ -6,13 +6,26 @@ rents.get("/rentals",async(req,res)=>{
     const {customerId,gameId,daysRented} = req.body
     try{
         const join = `
-        SELECT * FROM games 
+        SELECT rentals.*,
+                games.id As "gameindentific",games.name AS "game_name",
+                customers.id AS "userid",customers.name AS "client" 
+                FROM games 
         JOIN rentals 
             ON games.id = rentals."gameId" 
         JOIN  customers
             ON customers.id = rentals."customerId";`
         const table = await DB.query(join)
-        return res.status(200).send(table.rows)
+        const table_formated = table.rows.map((object)=>{
+            object.game = {id:object.gameindentific,name:object.game_name};
+            object.customer ={id:object.userid, name:object.client};
+            object.rentDate = dayjs(object.rentDate).format("YYYY-MM-DD")
+            delete object.gameindentific;
+            delete object.game_name;
+            delete object.userid;
+            delete object.client;
+            return object
+        })
+        return res.status(200).send(table_formated)
     }catch(err){return res.status(500).send(err.message)}
 })
 rents.post("/rentals",async(req,res)=>{
@@ -26,11 +39,11 @@ rents.post("/rentals",async(req,res)=>{
     }
     try{
         const have_client = await DB.query('SELECT * FROM customers WHERE id = $1',[customerId])
-        if(have_client.rowCount === 0){
+        if(have_client.rowCount !== 1){
             return res.sendStatus(400)
         }
         const have_game = await DB.query('SELECT * FROM games WHERE id = $1',[gameId])
-        if(have_game.rowCount === 0){
+        if(have_game.rowCount !== 1){
             return res.sendStatus(400)
         }
         const originalPrice = Number(have_game.rows[0].pricePerDay)*Number(daysRented)
