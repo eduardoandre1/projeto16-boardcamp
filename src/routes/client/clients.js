@@ -13,7 +13,7 @@ client.get('/customers',async(req,res)=>{
     }catch(err){return res.status(500).send(err.message)}
     
 })
-client.get(client.get('/customers/:id',async(req,res)=>{ 
+client.get('/customers/:id',async(req,res)=>{ 
     const id = req.params.id
     //schema
     const schema_id = Joi.object({id :Joi.number().integer().required()})
@@ -27,14 +27,13 @@ client.get(client.get('/customers/:id',async(req,res)=>{
     //controler 
     try{
         const table = await DB.query(`SELECT id,name,phone,cpf,TO_CHAR(customers.birthday, 'YYYY-MM-DD') as birthday FROM customers WHERE id = $1;`,[id])
-        if(table.rowCount === 0){
+        if(table.rowCount !== 1){
             return res.sendStatus(404)
         }
         return res.status(200).send(table.rows[0])
     }catch(err){return res.status(500).send(err.message)}
     
-}))
-
+})
 client.post('/customers',async(req,res)=>{
     const {name,phone,cpf,birthday} = req.body
     //middlleware

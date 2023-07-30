@@ -1,12 +1,21 @@
-import { Router } from "express";
+import { Router, query } from "express";
 import DB from "../../database/postgresSQL.js";
 import  dayjs  from "dayjs";
 const rents = Router()
-rents.get("/rental",async(req,res)=>{
+rents.get("/rentals",async(req,res)=>{
     const {customerId,gameId,daysRented} = req.body
-    
+    try{
+        const join = `
+        SELECT * FROM games 
+        JOIN rentals 
+            ON games.id = rentals."gameId" 
+        JOIN  customers
+            ON customers.id = rentals."customerId";`
+        const table = await DB.query(join)
+        return res.status(200).send(table.rows)
+    }catch(err){return res.status(500).send(err.message)}
 })
-rents.post("/rental",async(req,res)=>{
+rents.post("/rentals",async(req,res)=>{
     const {customerId,gameId,daysRented} = req.body
     const rentDate = dayjs().format("YYYY-MM-DD")
     const returnDate =null
