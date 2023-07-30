@@ -1,4 +1,4 @@
-import DB from "../database/postgresSQL.js"
+import DB from "../../database/postgresSQL.js"
 
 async function customers_list(req,res){ 
     try{

@@ -2,7 +2,7 @@ import DB from "../../database/postgresSQL.js";
 import { Router} from "express";
 import Joi from "joi";
 import schema_custumer from "../../schemas/schemas_client.js";
-import customers_list from "../../controlers/customers_list.js";
+import customers_list from "../../controlers/customers/customers_list.js";
 
 const client = Router()
 
