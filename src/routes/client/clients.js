@@ -1,18 +1,12 @@
 import DB from "../../database/postgresSQL.js";
-import { Router, json } from "express";
+import { Router} from "express";
 import Joi from "joi";
 import schema_custumer from "../../schemas/schemas_client.js";
+import customers_list from "../../controlers/customers_list.js";
 
 const client = Router()
 
-client.get('/customers',async(req,res)=>{ 
-    
-    try{
-        const table = await DB.query(`SELECT id,name,phone,cpf,TO_CHAR(customers.birthday, 'YYYY-MM-DD') as birthday FROM customers;`)
-        return res.status(200).send(table.rows)
-    }catch(err){return res.status(500).send(err.message)}
-    
-})
+client.get('/customers',customers_list)
 client.get('/customers/:id',async(req,res)=>{ 
     const id = req.params.id
     //schema
@@ -70,6 +64,10 @@ client.put('/customers/:id',async(req,res)=>{
         return res.sendStatus(400)
     }
     try{
+        const already_have = await DB.query(`SELECT * FROM customers WHERE cpf = $1`,[cpf])
+        if(already_have.rowCount !== 0){
+            return res.sendStatus(409)
+        }
         await DB.query('UPDATE customers SET (name,phone,cpf,birthday) = ($1,$2,$3,$4) WHERE id = $5;',[name,phone,cpf,birthday,id])
         console.log('done')
         return res.sendStatus(200)
