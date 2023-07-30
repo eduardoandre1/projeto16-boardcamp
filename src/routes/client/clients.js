@@ -32,8 +32,7 @@ client.get('/customers/:id',async(req,res)=>{
 client.post('/customers',async(req,res)=>{
     const {name,phone,cpf,birthday} = req.body
     //middlleware
-    console.log(dayjs('verde').$d)
-    if(!dayjs('verde').isValid()){
+    if(!dayjs(birthday).isValid()){
         return res.sendStatus(400)
     }
     const customers_create ={
