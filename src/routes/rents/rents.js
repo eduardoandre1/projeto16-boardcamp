@@ -54,15 +54,14 @@ rents.post('/rentals/:id/return',async(req,res)=>{
 })
 rents.delete('/rentals/:id',async(req,res)=>{
     const id = req.params.id
-    console.log(id)
     //middleware
     try{
         const already_have = await DB.query(`SELECT * FROM rentals WHERE id = $1`,[id])
         if(already_have.rowCount === 0){
             return res.sendStatus(409)
         }
-        const return_date = already_have[0].returnDate
-        if(return_date !== null){
+        console.log(already_have.rows)
+        if(already_have.rows[0].returnDate === null){
             return res.sendStatus(400)
         }
         // end middleware
