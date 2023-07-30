@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import DB from '../../database/postgresSQL.js'
 import Joi from 'joi'
+import schema_game from '../../schemas/schemas_game.js'
 
 const games = Router()
 games.get('/games',async(req,res)=>{ 
@@ -20,13 +21,7 @@ games.post('/games', async(req,res)=>{
         stockTotal: stockTotal,
         pricePerDay: pricePerDay,
     }
-    const schema = Joi.object({
-        name: Joi.string().required(),
-        image: Joi.string().required(),
-        stockTotal: Joi.number().min(1),
-        pricePerDay:Joi.number().min(1)
-    })
-    const input_test =schema.validate(game_maker)
+    const input_test =schema_game.validate(game_maker)
     if(input_test.error){
         return res.status(400).send(input_test.error)
     }
