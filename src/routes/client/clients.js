@@ -3,6 +3,7 @@ import { Router} from "express";
 import Joi from "joi";
 import schema_custumer from "../../schemas/schemas_client.js";
 import customers_list from "../../controlers/customers/customers_list.js";
+import dayjs from "dayjs";
 
 const client = Router()
 
@@ -31,6 +32,10 @@ client.get('/customers/:id',async(req,res)=>{
 client.post('/customers',async(req,res)=>{
     const {name,phone,cpf,birthday} = req.body
     //middlleware
+    console.log(dayjs('verde').$d)
+    if(!dayjs('verde').isValid()){
+        return res.sendStatus(400)
+    }
     const customers_create ={
         name:name,phone:phone,cpf:cpf,birthday:birthday
     }
