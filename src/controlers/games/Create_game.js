@@ -1,7 +1,7 @@
 
 import DB from "../../database/postgresSQL.js"
 async function Create_game(req,res){
-    const {name,phone,cpf,birthday} = req.body
+    const {name,image,stockTotal,pricePerDay} = req.body
     try{
         const already_have = await DB.query("SELECT * FROM games WHERE name = $1",[name])
         console.log(already_have)
