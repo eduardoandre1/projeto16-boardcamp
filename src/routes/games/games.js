@@ -2,6 +2,7 @@ import { Router } from 'express'
 import DB from '../../database/postgresSQL.js'
 import Joi from 'joi'
 import schema_game from '../../schemas/schemas_game.js'
+import input_validate from '../../middlewars/Input_validation.js'
 
 const games = Router()
 games.get('/games',async(req,res)=>{ 
@@ -14,16 +15,13 @@ games.get('/games',async(req,res)=>{
 
 games.post('/games', async(req,res)=>{
     const {name,image,stockTotal,pricePerDay} = req.body
+    console.log(req.body.rows)
     // input validation 
     const game_maker = {
         name: name,
         image: image,
         stockTotal: stockTotal,
         pricePerDay: pricePerDay,
-    }
-    const input_test =schema_game.validate(game_maker)
-    if(input_test.error){
-        return res.status(400).send(input_test.error)
     }
     //
     try{
