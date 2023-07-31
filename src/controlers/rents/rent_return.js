@@ -9,6 +9,9 @@ export default async function rent_return(req,res){
         if(rent.rowCount !== 1){
             return res.sendStatus(404)
         }
+        if(rent.rows[0].rentDate){
+            return res.sendStatus(400)
+        }
         const valited_day = dayjs(rent.rows[0].rentDate).add(rent.rows[0].daysRented,'days').format('YYYY-MM-DD')
         const days_delay = dayjs(returnDate).diff(valited_day,'day')
         const price_per_day = Number(rent.rows[0].originalPrice)/(rent.rows[0].daysRented)
