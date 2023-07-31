@@ -1,3 +1,0 @@
-function getTable(column){
-    return
-}

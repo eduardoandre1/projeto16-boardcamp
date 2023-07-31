@@ -1,4 +1,5 @@
-export default async function input_validate(schema){
+
+export default function input_validate(schema){
     return (req,res,next)=>{
     const input_test =schema.validate(req.body,{abortEarly:false})
     if(input_test.error){
