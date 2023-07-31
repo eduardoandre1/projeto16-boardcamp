@@ -5,7 +5,7 @@ export default async function rent_delete(req,res){
     try{
         const already_have = await DB.query(`SELECT * FROM rentals WHERE id = $1`,[id])
         if(already_have.rowCount === 0){
-            return res.sendStatus(409)
+            return res.sendStatus(404)
         }
         console.log(already_have.rows)
         if(already_have.rows[0].returnDate === null){
