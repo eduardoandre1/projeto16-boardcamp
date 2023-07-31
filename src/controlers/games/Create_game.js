@@ -10,7 +10,7 @@ async function Create_game(req,res){
         }
         await DB.query('UPDATE customers SET (name,phone,cpf,birthday) = ($1,$2,$3,$4) WHERE id = $5;',[name,phone,cpf,birthday,id])
         console.log('done')
-        return res.sendStatus(200)
+        return res.sendStatus(201)
     }catch(err){return res.status(500).send(err.message)}
 }
 export default Create_game
