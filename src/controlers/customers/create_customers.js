@@ -11,8 +11,6 @@ async function Create_customers(req,res){
         if(already_have.rowCount !== 0){
             return res.sendStatus(409)
         }
-    // end the midlle
-    // controller
         const inserir = `INSERT INTO customers (name,phone,cpf,birthday) VALUES ($1,$2,$3,$4)`
         const g = await DB.query(inserir,[name,phone,cpf,birthday])
         console.log('done')
