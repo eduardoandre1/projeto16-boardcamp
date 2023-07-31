@@ -1,4 +1,5 @@
 import DB from "../../database/postgresSQL.js"
+import dayjs from "dayjs"
 export default async function create_rent(req,res){
     const {customerId,gameId,daysRented} = req.body
     const rentDate = dayjs().format("YYYY-MM-DD")
@@ -15,6 +16,9 @@ export default async function create_rent(req,res){
         }
         const have_game = await DB.query('SELECT * FROM games WHERE id = $1',[gameId])
         if(have_game.rowCount !== 1){
+            return res.sendStatus(400)
+        }
+        if(have_game.rows[0].stockTotal=== 0){
             return res.sendStatus(400)
         }
         const originalPrice = Number(have_game.rows[0].pricePerDay)*Number(daysRented)
