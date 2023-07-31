@@ -7,6 +7,9 @@ function rent_list_formater(object){
     delete object.game_name;
     delete object.userid;
     delete object.client;
+    if(object.returnDate){
+        object.returnDate = dayjs(object.returnDate).format("YYYY-MM-DD")
+    }
     return object
 }
 export default rent_list_formater

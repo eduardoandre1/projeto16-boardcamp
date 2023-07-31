@@ -1,15 +1,15 @@
 import DB from "../../database/postgresSQL.js"
+import dayjs from "dayjs"
 
 export default async function rent_return(req,res){
     const id = req.params.id
     const returnDate = dayjs().format('YYYY-MM-DD')
-    console.log(returnDate)
     try{
         const rent = await DB.query('SELECT * FROM rentals WHERE id = $1',[id])
         if(rent.rowCount !== 1){
             return res.sendStatus(404)
         }
-        if(rent.rows[0].rentDate){
+        if(rent.rows[0].rentDate=== null){
             return res.sendStatus(400)
         }
         const valited_day = dayjs(rent.rows[0].rentDate).add(rent.rows[0].daysRented,'days').format('YYYY-MM-DD')
