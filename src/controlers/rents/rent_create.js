@@ -21,6 +21,10 @@ export default async function create_rent(req,res){
         if(have_game.rows[0].stockTotal=== 0){
             return res.sendStatus(400)
         }
+        const have_rent = await DB.query('SELECT * FROM rentals WHERE "gameId"=$1',[gameId])
+        if(have_rent.rowCount >= have_game.rows[0].stockTotal){
+            return res.sendStatus(400)
+        }
         const originalPrice = Number(have_game.rows[0].pricePerDay)*Number(daysRented)
         const insert = `INSERT INTO rentals 
         ("customerId","gameId","daysRented","rentDate","returnDate","delayFee","originalPrice") 
